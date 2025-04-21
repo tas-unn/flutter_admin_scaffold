@@ -28,7 +28,7 @@ class AdminScaffold extends StatefulWidget {
 
 class _AdminScaffoldState extends State<AdminScaffold>
     with SingleTickerProviderStateMixin {
-  late AppBar? _appBar;
+
   late AnimationController _animationController;
   late Animation _animation;
   bool _isMobile = false;
@@ -39,7 +39,7 @@ class _AdminScaffoldState extends State<AdminScaffold>
   @override
   void initState() {
     super.initState();
-    _appBar = _buildAppBar(widget.appBar, widget.sideBar, widget.leadingIcon);
+    //_appBar = _buildAppBar(widget.appBar, widget.sideBar, widget.leadingIcon);
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -140,7 +140,7 @@ class _AdminScaffoldState extends State<AdminScaffold>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: widget.backgroundColor,
-      appBar: _appBar,
+      appBar: _buildAppBar(widget.appBar, widget.sideBar, widget.leadingIcon),
       body: AnimatedBuilder(
         animation: _animation,
         builder: (_, __) => widget.sideBar == null
