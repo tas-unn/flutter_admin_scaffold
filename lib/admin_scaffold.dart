@@ -143,69 +143,81 @@ class _AdminScaffoldState extends State<AdminScaffold>
       appBar: _buildAppBar(widget.appBar, widget.sideBar, widget.leadingIcon),
       body: AnimatedBuilder(
         animation: _animation,
-        builder: (_, __) => widget.sideBar == null
-            ? Row(
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: widget.body,
+        builder: (_, __) {
+          // Без сайдбара
+          if (widget.sideBar == null) {
+            return Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    padding: const EdgeInsets.all(16),
+                    child: widget.body,
+                  ),
+                ),
+              ],
+            );
+          }
+
+          // Мобильная версия с анимацией сайдбара
+          if (_isMobile) {
+            return Stack(
+              children: [
+                GestureDetector(
+                  onHorizontalDragStart: _onDragStart,
+                  onHorizontalDragUpdate: _onDragUpdate,
+                  onHorizontalDragEnd: _onDragEnd,
+                ),
+                widget.body,
+                if (_animation.value > 0)
+                  Container(
+                    color:
+                    Colors.black.withAlpha((150 * _animation.value).toInt()),
+                  ),
+                if (_animation.value == 1)
+                  GestureDetector(
+                    onTap: _toggleSidebar,
+                    onHorizontalDragUpdate: _dragCloseDrawer,
+                  ),
+                ClipRect(
+                  child: SizedOverflowBox(
+                    size: Size(
+                      (widget.sideBar?.width ?? 1.0) * _animation.value,
+                      double.infinity,
                     ),
+                    child: widget.sideBar,
                   ),
-                ],
-              )
-            : _isMobile
-                ? Stack(
-                    children: [
-                      GestureDetector(
-                        onHorizontalDragStart: _onDragStart,
-                        onHorizontalDragUpdate: _onDragUpdate,
-                        onHorizontalDragEnd: _onDragEnd,
-                      ),
-                      widget.body,
-                      if (_animation.value > 0)
-                        Container(
-                          color: Colors.black
-                              .withAlpha((150 * _animation.value).toInt()),
-                        ),
-                      if (_animation.value == 1)
-                        GestureDetector(
-                          onTap: _toggleSidebar,
-                          onHorizontalDragUpdate: _dragCloseDrawer,
-                        ),
-                      ClipRect(
-                        child: SizedOverflowBox(
-                          size: Size(
-                              (widget.sideBar?.width ?? 1.0) * _animation.value,
-                              double.infinity),
-                          child: widget.sideBar,
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      widget.sideBar != null
-                          ? ClipRect(
-                              child: SizedOverflowBox(
-                                size: Size(
-                                    (widget.sideBar?.width ?? 1.0) *
-                                        _animation.value,
-                                    double.infinity),
-                                child: widget.sideBar,
-                              ),
-                            )
-                          : SizedBox(),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: widget.body,
-                        ),
-                      ),
-                    ],
+                ),
+              ],
+            );
+          }
+
+          // Десктоп/таб с сайдбаром
+          return Row(
+            children: [
+              if (widget.sideBar != null)
+                ClipRect(
+                  child: SizedOverflowBox(
+                    size: Size(
+                      (widget.sideBar?.width ?? 1.0) * _animation.value,
+                      double.infinity,
+                    ),
+                    child: widget.sideBar,
                   ),
+                ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  padding: const EdgeInsets.all(16),
+                  child: widget.body,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
+
   }
 
   AppBar? _buildAppBar(AppBar? appBar, SideBar? sideBar, Widget? leadingIcon) {
