@@ -1,20 +1,20 @@
+// sample_pages/dashboard_page_content.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_admin_scaffold_example/main.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPageContent extends StatelessWidget {
+  const DashboardPageContent({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      route: '/',
-      body: Container(
-        alignment: Alignment.topLeft,
-        padding: const EdgeInsets.all(10),
-        child: Text(
-          'Dashboard',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 36,
-          ),
+    // Этот виджет теперь просто контент страницы
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.all(10),
+      child: const Text(
+        'Dashboard Content',
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 36,
         ),
       ),
     );
