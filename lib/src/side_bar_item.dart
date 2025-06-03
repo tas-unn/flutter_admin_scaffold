@@ -55,7 +55,7 @@ class SideBarItem extends StatelessWidget {
     if (item.children.isEmpty) {
       return ListTile(
         contentPadding: _getTilePadding(depth),
-        leading: _buildIcon(item.icon, selected),
+        leading: _buildIcon(item.selectedicon, selected),
         title: _buildTitle(item.title, selected),
         selected: selected,
         tileColor: backgroundColor,
@@ -68,39 +68,49 @@ class SideBarItem extends StatelessWidget {
       );
     }
 
-    int index = 0;
-    final childrenTiles = item.children.map((child) {
-      return SideBarItem(
-        items: item.children,
-        index: index++,
-        onSelected: onSelected,
-        selectedRoute: selectedRoute,
-        depth: depth + 1,
-        iconColor: iconColor,
-        activeIconColor: activeIconColor,
-        textStyle: textStyle,
-        activeTextStyle: activeTextStyle,
-        backgroundColor: backgroundColor,
-        activeBackgroundColor: activeBackgroundColor,
-        borderColor: borderColor,
-      );
-    }).toList();
-
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
+        key: PageStorageKey<AdminMenuItem>(item),
         tilePadding: _getTilePadding(depth),
-        leading: _buildIcon(item.icon),
-        title: _buildTitle(item.title),
+        leading: _buildIcon(item.selectedicon, selected),
+        title: _buildTitle(item.title, selected),
         initiallyExpanded: selected,
-        children: childrenTiles,
+        onExpansionChanged: (bool expanding) {
+          // setState(() {
+          //   // можно сохранять состояние раскрытия, если нужно
+          // });
+        },
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: item.children.length,
+            itemBuilder: (context, idx) {
+              return SideBarItem(
+                items: item.children,
+                index: idx,
+                onSelected: onSelected,
+                selectedRoute: selectedRoute,
+                depth: depth + 1,
+                iconColor: iconColor,
+                activeIconColor: activeIconColor,
+                textStyle: textStyle,
+                activeTextStyle: activeTextStyle,
+                backgroundColor: backgroundColor,
+                activeBackgroundColor: activeBackgroundColor,
+                borderColor: borderColor,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
   bool _isSelected(String route, List<AdminMenuItem> items) {
     for (final item in items) {
-      if (item.route == route) {
+      if (item.pathtomenu == route) {
         return true;
       }
       if (item.children.isNotEmpty) {
@@ -116,12 +126,8 @@ class SideBarItem extends StatelessWidget {
             icon,
             size: 22,
             color: selected
-                ? activeIconColor != null
-                    ? activeIconColor
-                    : activeTextStyle.color
-                : iconColor != null
-                    ? iconColor
-                    : textStyle.color,
+                ? activeIconColor ?? activeTextStyle.color
+                : iconColor ?? textStyle.color,
           )
         : SizedBox();
   }
