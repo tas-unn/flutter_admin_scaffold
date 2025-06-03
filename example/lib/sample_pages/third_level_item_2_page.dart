@@ -1,20 +1,20 @@
+// sample_pages/dashboard_page_content.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_admin_scaffold_example/main.dart';
 
-class ThirdLevelItem2Page extends StatelessWidget {
+class ThirdItem2PageContent extends StatelessWidget {
+  const ThirdItem2PageContent({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      route: '/thirdLevelItem2',
-      body: Container(
-        alignment: Alignment.topLeft,
-        padding: const EdgeInsets.all(10),
-        child: Text(
-          'Third Level Item 2',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 36,
-          ),
+    // Этот виджет теперь просто контент страницы
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.all(10),
+      child: const Text(
+        'ThirdItem1PageContent Content',
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 36,
         ),
       ),
     );
